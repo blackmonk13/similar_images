@@ -2,12 +2,10 @@ import os
 from typing import Callable, List, Tuple
 import flet as ft
 
-from core import get_image_info, get_supported_image
-
 
 class SimilarViewer(ft.UserControl):
-    def __init__(self, on_delete_image: Callable[[str], None]):
-        super().__init__()
+    def __init__(self, on_delete_image: Callable[[str], None], *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.on_delete_image = on_delete_image
         self.listview = ft.ListView(
             spacing=10,
@@ -66,11 +64,11 @@ class SimilarViewer(ft.UserControl):
         fit: ft.ImageFit = ft.ImageFit.CONTAIN,
         expand: bool | int | None = None
     ):
-        bytes_img: bytes = get_supported_image(
-            image_path,
-            max_size=max_size,
-            as_b64=True,
-        )  # type: ignore
+        # bytes_img: bytes = get_supported_image(
+        #     image_path,
+        #     max_size=max_size,
+        #     as_b64=True,
+        # )  # type: ignore
         return ft.Image(
             src_base64=bytes_img.decode('utf-8'), # type: ignore
             height=height,
@@ -86,7 +84,8 @@ class SimilarViewer(ft.UserControl):
 
     def build_image_info(self, image_path: str, data: tuple):
         image = self.build_image(image_path, expand=8)
-        image_info = get_image_info(image_path)
+        # image_info = get_image_info(image_path)
+        image_info = {}
         return ft.Card(
             content=ft.Container(
                 content=ft.Column(
@@ -114,9 +113,16 @@ class SimilarViewer(ft.UserControl):
                         image,
                         ft.ListTile(
                             leading=ft.Icon(ft.icons.PHOTO),
-                            title=ft.Text(os.path.basename(image_path)),
+                            # title=ft.Text(os.path.basename(image_path)),
                             subtitle=ft.Column(
                                 [
+                                    ft.Row(
+                                        [
+                                            ft.Text(
+                                                os.path.basename(image_path),
+                                            ),
+                                        ],
+                                    ),
                                     ft.Row(
                                         [
                                             ft.Text(

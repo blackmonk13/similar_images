@@ -8,12 +8,15 @@
             "name": "Flet App",
             "type": "python",
             "request": "launch",
-            "module": "flet",
+            "program": "C:/Users/spenc/.pyenv/pyenv-win/versions/3.11.2/Scripts/flet.exe",
             "args": [
                 "run",
                 "main.py",
-                "-d"
-            ]
+                "-d",
+                "-r"                    
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true,
         }
     ]
 }

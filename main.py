@@ -3,10 +3,10 @@ import threading
 from typing import List, Tuple
 import flet as ft
 from send2trash import send2trash
-from components.banners import failed_delete_banner
-from core import ImageSimilarityFinder
+from core import SimilarityFinder
+from ui.app import DupliApp
 
-from components import FolderPicker, loading_modal, SimilarViewer
+from ui.components import FolderPicker, loading_modal, SimilarViewer, failed_delete_banner
 
 
 similarities: List[Tuple[str, str, int]] = []
@@ -14,9 +14,15 @@ similarities: List[Tuple[str, str, int]] = []
 
 def main(page: ft.Page):
     page.title = "Dupli"
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.window_min_width = 800
     page.window_min_height = 480
+    page.padding = 0
+    app = DupliApp(page, expand=True)
+    page.add(app)
+    page.update()
+    app.initialize()
+    
+    return
 
     def page_resize(e):
         print("New page size:", page.window_width, page.window_height)
@@ -91,7 +97,7 @@ def main(page: ft.Page):
 
     def scan_folder():
         global similarities
-        finder = ImageSimilarityFinder()
+        finder = SimilarityFinder()
         similarities = finder.find_similar_images(
             get_selected_path(),
             threshold=1
@@ -159,5 +165,5 @@ def main(page: ft.Page):
     close_banner(None)
     page.update()
 
-
-ft.app(target=main)
+if __name__ == "__main__":
+    ft.app(target=main)
