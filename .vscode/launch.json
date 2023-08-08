@@ -12,8 +12,8 @@
             "args": [
                 "run",
                 "main.py",
-                "-d",
-                "-r"                    
+                // "-d",
+                // "-r"                    
             ],
             "console": "integratedTerminal",
             "justMyCode": true,

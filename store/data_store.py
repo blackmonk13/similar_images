@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, OrderedDict
 from send2trash import send2trash
 
 from core.similar_image import SimilarImage
@@ -8,14 +8,14 @@ from core.similar_image import SimilarImage
 
 class DataStore:
     def __init__(self):
-        self._similarities: Dict[SimilarImage, Dict[int, List[SimilarImage]]] = {}
+        self._similarities: OrderedDict[SimilarImage, OrderedDict[int, List[SimilarImage]]] = OrderedDict()
 
     @property
     def similarities(self):
         return self._similarities
 
     @similarities.setter
-    def similarities(self, data: Dict[SimilarImage, Dict[int, List[SimilarImage]]]):
+    def similarities(self, data: OrderedDict[SimilarImage, OrderedDict[int, List[SimilarImage]]]):
         self._similarities = data
         
 

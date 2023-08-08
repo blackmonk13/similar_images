@@ -12,14 +12,14 @@ from io import BytesIO
 from fractions import Fraction
 from send2trash import send2trash
 from concurrent.futures import ThreadPoolExecutor
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, Iterable, List, OrderedDict, Tuple
 from functools import lru_cache
 
 from core.similar_image import SimilarImage
 
 
 class SimilarityFinder:
-    def get_image_hash(self, image_path: str) -> imagehash.ImageHash | None:
+    def calculate_hash(self, image_path: str) -> imagehash.ImageHash | None:
         try:
             with Image.open(image_path) as image:
                 hash_value = imagehash.average_hash(image)
@@ -27,64 +27,65 @@ class SimilarityFinder:
         except UnidentifiedImageError:
             return None
 
+    def is_image(self, path: str) -> bool:
+        mime_type = mimetypes.guess_type(path)
+        if mime_type[0] is not None and mime_type[0].startswith("image"):
+            return True
+        return False
+
+    def list_path(self, root_path: str) -> Iterable[str]:
+        for file_name in os.listdir(root_path):
+            file_path = os.path.join(
+                root_path, file_name).replace("\\", "/")
+            if self.is_image(path=file_path):
+                yield file_path
+
     def walk_path(self, root_path: str) -> Iterable[str]:
         for root_path, directories, files in os.walk(root_path):
             for file_name in files:
                 file_path = os.path.join(
                     root_path, file_name).replace("\\", "/")
-                mime_type = mimetypes.guess_type(file_path)
-                if mime_type[0] is not None and mime_type[0].startswith("image"):
+                if self.is_image(path=file_path):
                     yield file_path
 
-    def find_similar_images(self, folder_dir: str, threshold: int = 10):
+    def find_similar_images(self, folder_path: str, threshold: int = 10):
         images_with_hashes: set[SimilarImage] = set()
-        all_files = self.walk_path(folder_dir)
-        similar_images: Dict[SimilarImage, Dict[int, List[SimilarImage]]] = {}
+        all_files = self.walk_path(folder_path)
+        similar_images: OrderedDict[SimilarImage, OrderedDict[int, List[SimilarImage]]] = OrderedDict()
 
         def process_hash(file: str):
-            hash_value = self.get_image_hash(file)
+            hash_value = self.calculate_hash(file)
             if hash_value is not None:
                 return SimilarImage(file, hash_value)
-            
-        def group_items(items:Iterable[SimilarImage]):
-            grouped = []
-            for item in items:
-                found_group = False
-                for group in grouped:
-                    if all(abs(item.image_hash - other.image_hash) < threshold for other in group):
-                        group.append(item)
-                        found_group = True
+
+        def images_exist(images: List[SimilarImage], difference: int):
+            exists = False
+            for sim in similar_images.values():
+                try:
+                    if sim[difference] and any(img in sim[difference] for img in images):
+                        exists = True
                         break
-                if not found_group:
-                    grouped.append([item])
-            return grouped
+                except KeyError:
+                    continue
+            return exists
 
         with ThreadPoolExecutor() as executor:
             hash_results = executor.map(process_hash, all_files)
-            images_with_hashes = set(result for result in hash_results if result)
+            images_with_hashes = set(
+                result for result in hash_results if result)
 
-            grouped_items = [x for x in group_items(images_with_hashes) if len(x) > 1]
-            for i in grouped_items:
-                print(i)
+        for img1, img2 in itertools.combinations(images_with_hashes, 2):
+            hash_difference = img1.image_hash - img2.image_hash
+            if hash_difference <= threshold:
+                if images_exist([img1, img2], hash_difference):
+                    continue
+                if img1 not in similar_images:
+                    similar_images[img1] = OrderedDict()
+                if hash_difference not in similar_images[img1]:
+                    similar_images[img1][hash_difference] = []
+                similar_images[img1][hash_difference].append(img2)
 
-        #     for x, y in itertools.product(images_with_hashes, images_with_hashes):
-        #         if x and y:
-        #             similarity = x.image_hash - y.image_hash
-        #             if similarity < threshold:
-        #                 if x is y:
-        #                     continue
-        #                 if y in similar_images:
-        #                     if x in similar_images[y][similarity]:
-        #                         continue
-        #                 if x in similar_images:
-        #                     if similarity in similar_images[x]:
-        #                         similar_images[x][similarity].append(y)
-        #                     else:
-        #                         similar_images[x][similarity] = [y]
-        #                 else:
-        #                     similar_images[x] = {similarity: [y]}
-
-        # return similar_images
+        return similar_images
 
 
 @lru_cache(maxsize=20)
