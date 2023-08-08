@@ -1,0 +1,3 @@
+# Dupli
+
+Duplicate images finder
