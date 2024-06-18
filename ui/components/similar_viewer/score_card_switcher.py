@@ -74,10 +74,10 @@ class ScoreCardSwitcher(ft.UserControl):
                         self.previous_button,
                         self.next_button,
                     ],
-                    # alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                    alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                     # top=50,
                     height=50,
-                    width=100,
+                    expand=True,
                 )
             ],
             clip_behavior=ft.ClipBehavior.HARD_EDGE,
