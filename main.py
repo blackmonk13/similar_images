@@ -17,11 +17,11 @@ def main(page: ft.Page):
     page.window_min_width = 800
     page.window_min_height = 480
     page.padding = 0
-    app = DupliApp(page, expand=True)
+    app = DupliApp(page, expand=True,)
     page.add(app)
     page.update()
     app.initialize()
-    
+
     return
 
     def page_resize(e):
@@ -164,6 +164,7 @@ def main(page: ft.Page):
     page.overlay.append(folder_picker.picker)
     close_banner(None)
     page.update()
+
 
 if __name__ == "__main__":
     ft.app(target=main)
