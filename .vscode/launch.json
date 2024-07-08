@@ -4,13 +4,28 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+    
+
         {
             "name": "Flet App",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
-            "program": "C:/Users/spenc/.pyenv/pyenv-win/versions/3.11.2/Scripts/flet.exe",
+            "program": "flet",
             "args": [
                 "run",
+                "main.py",
+                // "-d",
+                // "-r"                    
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true,
+        },
+        {
+            "name": "Mesop App",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}${/}.venv${/}Scripts${/}mesop.exe",
+            "args": [
                 "main.py",
                 // "-d",
                 // "-r"                    
