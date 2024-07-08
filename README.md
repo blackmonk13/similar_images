@@ -1,3 +1,3 @@
-# Dupli
+# Similar Images
 
-Duplicate images finder
+Similar images finder
