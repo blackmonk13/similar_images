@@ -1,0 +1,5 @@
+flet
+mesop
+numpy
+pandas
+pyinstaller

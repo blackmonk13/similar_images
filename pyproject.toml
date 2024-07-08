@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "similar_images"
+version = "1.0.1"
+authors = [{ name = "blackmonk13" }]
+description = "Find similar images"
+readme = "README.md"
+requires-python = ">=3.6"
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+keywords = ["imagehash", "similarimages", "averagehash", "disjoint_set"]
+dependencies = ["imagehash", "pillow", "send2trash"]
+
+[project.urls]
+"Homepage" = "https://github.com/blackmonk13/similar_images"
+"Bug Tracker" = "https://github.com/blackmonk13/similar_images/issues"
+
+[project.scripts]
+similar_images = "similar_images.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["similar_images"]
+exclude = ["*.tests", "*.tests.*", "tests.*", "tests"]

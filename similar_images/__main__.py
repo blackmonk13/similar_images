@@ -43,7 +43,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "-r",
         "--recursive",
-        action='store_true',
+        type=bool,
+        default=False,
         help="Iterate recursively in path",
     )
     parser.add_argument(
@@ -54,18 +55,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     try:
-        if args.recursive:
-            similarities = find_similarities(
-                args.path,
-                args.threshold,
-                True,
-            )
-        else:
-            similarities = find_similarities(
-                args.path,
-                args.threshold,
-                False,
-            )
+        similarities = find_similarities(
+            args.path,
+            args.threshold,
+            args.recursive,
+        )
         print(json.dumps(similarities, indent=4))
     except ValueError as e:
         print(f"Error: {e}")
