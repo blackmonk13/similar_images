@@ -83,27 +83,20 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
-6. Run the project
+6. Run the project using the command mentioned in the [Usage](#usage) section.
 
-```bash
-python -m similar_images -t 10 -r False path/to/your/image/directory
-```
-
-Replace `path/to/your/image/directory` with the path to the directory containing images you want to analyze. The `-t` flag sets the similarity threshold (default is 10), and the `-r` flag enables or disables recursive directory scanning (default is False).
-
-After following these steps, the project should be up and running on your local machine, and you'll see the results in JSON format displaying the groups of similar images found in the specified directory.
 
 ## 🎈 Usage <a name="usage"></a>
 
 To use the Similarity Finder, run the following command in your terminal:
 
 ```bash
-python -m similar_images -t 10 -r False path/to/your/image/directory
+python -m similar_images -t 1 -r -o json -f output.json path/to/your/image/directory
 ```
 
-Replace `path/to/your/image/directory` with the path to the directory containing images you want to analyze. The `-t` flag sets the similarity threshold (default is 10), and the `-r` flag enables or disables recursive directory scanning (default is False). A lower threshold will result in more similar images being grouped together.
+Replace path/to/your/image/directory with the path to the directory containing images you want to analyze. The -t flag sets the similarity threshold (default is 10), the -r flag enables or disables recursive directory scanning, the -o flag sets the output format (default is json), and the -f flag specifies the path to the output file.
 
-The application will output a JSON object containing groups of similar images found in the specified directory.
+The application will output a JSON or CSV file containing groups of similar images found in the specified directory.
 
 ## 🚀 Deployment <a name = "deployment"></a>
 

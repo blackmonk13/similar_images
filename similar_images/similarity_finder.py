@@ -1,3 +1,4 @@
+"""Similarity Finder"""
 import itertools
 import mimetypes
 import os
